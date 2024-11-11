@@ -1,0 +1,71 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Todos os h2 possuem fonte de tamanho igual 1.2em
+      id: todos-os-h2-possuem-fonte-de-tamanho-igual-1-2em
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Todos os h2 possuem fonte de tamanho igual 1.2em
+        setup-command: npm install
+        command: npm run test -- -t 'todos os h2 possuem fonte de tamanho igual 1.2em'
+        timeout: 10
+        max-score: 33
+    - name: 'Todos os paragrafos devem ter texto com a cor #333333'
+      id: todos-os-paragrafos-devem-ter-texto-com-a-cor-333333
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'Todos os paragrafos devem ter texto com a cor #333333'
+        setup-command: npm install
+        command: 'npm run test -- -t ''Todos os paragrafos devem ter texto com a cor
+          #333333'''
+        timeout: 10
+        max-score: 33
+    - name: Todos os elementos p.price devem ter o font-weight igual a bold
+      id: todos-os-elementos-p-price-devem-ter-o-font-weight-igual-a-bold
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Todos os elementos p.price devem ter o font-weight igual a bold
+        setup-command: npm install
+        command: npm run test -- -t 'Todos os elementos p.price devem ter o font-weight
+          igual a bold'
+        timeout: 10
+        max-score: 33
+    - name: Boas praticas em HTML
+      id: boas-praticas-em-html
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Boas praticas em HTML
+        setup-command: npm install
+        command: npx linthtml 'src/**/*.html'
+        timeout: 10
+    - name: Boas praticas em CSS
+      id: boas-praticas-em-css
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Boas praticas em CSS
+        setup-command: npm install
+        command: 'npx stylelint "src/**/*.css"     '
+        timeout: 10
+        max-score: 1
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        TODOS-OS-H2-POSSUEM-FONTE-DE-TAMANHO-IGUAL-1-2EM_RESULTS: "${{steps.todos-os-h2-possuem-fonte-de-tamanho-igual-1-2em.outputs.result}}"
+        TODOS-OS-PARAGRAFOS-DEVEM-TER-TEXTO-COM-A-COR-333333_RESULTS: "${{steps.todos-os-paragrafos-devem-ter-texto-com-a-cor-333333.outputs.result}}"
+        TODOS-OS-ELEMENTOS-P-PRICE-DEVEM-TER-O-FONT-WEIGHT-IGUAL-A-BOLD_RESULTS: "${{steps.todos-os-elementos-p-price-devem-ter-o-font-weight-igual-a-bold.outputs.result}}"
+        BOAS-PRATICAS-EM-HTML_RESULTS: "${{steps.boas-praticas-em-html.outputs.result}}"
+        BOAS-PRATICAS-EM-CSS_RESULTS: "${{steps.boas-praticas-em-css.outputs.result}}"
+      with:
+        runners: todos-os-h2-possuem-fonte-de-tamanho-igual-1-2em,todos-os-paragrafos-devem-ter-texto-com-a-cor-333333,todos-os-elementos-p-price-devem-ter-o-font-weight-igual-a-bold,boas-praticas-em-html,boas-praticas-em-css
