@@ -1,0 +1,21 @@
+label {
+    font-size: 1.1em;
+}
+
+textarea,
+input {
+    background-color: #f4f4f4;
+}
+
+input {
+    border: 3px;
+}
+
+button {
+    color: white;
+    background-color: #007bff;
+}
+
+div {
+    margin-bottom: 10px;
+}

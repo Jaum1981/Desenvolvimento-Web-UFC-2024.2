@@ -1,0 +1,93 @@
+name: Autograding Tests
+'on':
+- push
+- repository_dispatch
+permissions:
+  checks: write
+  actions: read
+  contents: read
+jobs:
+  run-autograding-tests:
+    runs-on: ubuntu-latest
+    if: github.actor != 'github-classroom[bot]'
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    - name: Boas praticas em HTML
+      id: boas-praticas-em-html
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Boas praticas em HTML
+        setup-command: npm install
+        command: npx linthtml 'src/**/*.html'
+        timeout: 10
+    - name: Boas praticas em CSS
+      id: boas-praticas-em-css
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Boas praticas em CSS
+        setup-command: npm install
+        command: 'npx stylelint "src/**/*.css"  '
+        timeout: 10
+    - name: Todos as labels devem possuir fonte de tamanho igual 1.1em
+      id: todos-as-labels-devem-possuir-fonte-de-tamanho-igual-1-1em
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Todos as labels devem possuir fonte de tamanho igual 1.1em
+        setup-command: npm install
+        command: npm run test -- -t 'Todos as labels devem possuir fonte de tamanho
+          igual 1.1em'
+        timeout: 10
+    - name: 'Todos os elementos elementos de entrada, incluindo o textarea, devem
+        ter o plano de fundo na cor #f4f4f4'
+      id: todos-os-elementos-elementos-de-entrada-incluindo-o-textarea-devem-ter-o-plano-de-fundo-na-cor-f4f4f4
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'Todos os elementos elementos de entrada, incluindo o textarea,
+          devem ter o plano de fundo na cor #f4f4f4'
+        setup-command: npm install
+        command: 'npm run test -- -t ''Todos os elementos elementos de entrada, incluindo
+          o textarea, devem ter o plano de fundo na cor #f4f4f4'''
+        timeout: 10
+    - name: Todos os elementos elementos devem ter a bordar arredondada em 3px
+      id: todos-os-elementos-elementos-devem-ter-a-bordar-arredondada-em-3px
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Todos os elementos elementos devem ter a bordar arredondada em
+          3px
+        setup-command: npm install
+        command: 'npm run test -- -t ''Todos os elementos elementos devem ter a bordar
+          arredondada em 3px''    '
+        timeout: 10
+    - name: 'O botão de submit deve ter plano de fundo na cor #007bff e text na cor
+        branca'
+      id: o-botao-de-submit-deve-ter-plano-de-fundo-na-cor-007bff-e-text-na-cor-branca
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: 'O botão de submit deve ter plano de fundo na cor #007bff e text
+          na cor branca'
+        setup-command: npm install
+        command: 'npm run test -- -t ''O botão de submit deve ter plano de fundo na
+          cor #007bff e text na cor branca'''
+        timeout: 10
+    - name: Todos as divs devem possuir margem inferior de 10px
+      id: todos-as-divs-devem-possuir-margem-inferior-de-10px
+      uses: classroom-resources/autograding-command-grader@v1
+      with:
+        test-name: Todos as divs devem possuir margem inferior de 10px
+        setup-command: npm install
+        command: 'npm run test -- -t ''Todos as divs devem possuir margem inferior
+          de 10px''       '
+        timeout: 10
+    - name: Autograding Reporter
+      uses: classroom-resources/autograding-grading-reporter@v1
+      env:
+        BOAS-PRATICAS-EM-HTML_RESULTS: "${{steps.boas-praticas-em-html.outputs.result}}"
+        BOAS-PRATICAS-EM-CSS_RESULTS: "${{steps.boas-praticas-em-css.outputs.result}}"
+        TODOS-AS-LABELS-DEVEM-POSSUIR-FONTE-DE-TAMANHO-IGUAL-1-1EM_RESULTS: "${{steps.todos-as-labels-devem-possuir-fonte-de-tamanho-igual-1-1em.outputs.result}}"
+        TODOS-OS-ELEMENTOS-ELEMENTOS-DE-ENTRADA-INCLUINDO-O-TEXTAREA-DEVEM-TER-O-PLANO-DE-FUNDO-NA-COR-F4F4F4_RESULTS: "${{steps.todos-os-elementos-elementos-de-entrada-incluindo-o-textarea-devem-ter-o-plano-de-fundo-na-cor-f4f4f4.outputs.result}}"
+        TODOS-OS-ELEMENTOS-ELEMENTOS-DEVEM-TER-A-BORDAR-ARREDONDADA-EM-3PX_RESULTS: "${{steps.todos-os-elementos-elementos-devem-ter-a-bordar-arredondada-em-3px.outputs.result}}"
+        O-BOTAO-DE-SUBMIT-DEVE-TER-PLANO-DE-FUNDO-NA-COR-007BFF-E-TEXT-NA-COR-BRANCA_RESULTS: "${{steps.o-botao-de-submit-deve-ter-plano-de-fundo-na-cor-007bff-e-text-na-cor-branca.outputs.result}}"
+        TODOS-AS-DIVS-DEVEM-POSSUIR-MARGEM-INFERIOR-DE-10PX_RESULTS: "${{steps.todos-as-divs-devem-possuir-margem-inferior-de-10px.outputs.result}}"
+      with:
+        runners: boas-praticas-em-html,boas-praticas-em-css,todos-as-labels-devem-possuir-fonte-de-tamanho-igual-1-1em,todos-os-elementos-elementos-de-entrada-incluindo-o-textarea-devem-ter-o-plano-de-fundo-na-cor-f4f4f4,todos-os-elementos-elementos-devem-ter-a-bordar-arredondada-em-3px,o-botao-de-submit-deve-ter-plano-de-fundo-na-cor-007bff-e-text-na-cor-branca,todos-as-divs-devem-possuir-margem-inferior-de-10px
